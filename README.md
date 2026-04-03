@@ -1,31 +1,37 @@
 # @bayendor/models-triage
 
-Intelligent model routing and task triage for OpenClaw.
+GLM-first model routing and task triage for OpenClaw.
 
 ## Description
-`models-triage` acts as an automated routing layer for your OpenClaw agent. It analyzes the complexity of every incoming prompt and dynamically routes the task to the most suitable LLM, optimizing performance and cost.
+`models-triage` analyzes incoming prompts and routes them to the most efficient model by capability.
 
-## Why Use This?
-- **Cost Efficiency**: Handle routine tasks with lightweight models (e.g., Flash Lite) and reserve expensive models only for complex tasks.
-- **Improved Performance**: Ensures complex requests (coding, architectural analysis) are handled by models with high reasoning capabilities.
-- **Seamless Integration**: Works out-of-the-box with OpenClaw sub-agent orchestration.
+Current policy:
+- Text work stays on GLM.
+- GPT is reserved for image and multimodal work.
+- Higher GLM tiers are used only when the task actually needs them.
 
-## Complexity Classification
+## Routing tiers
 
-| Complexity | Typical Tasks | Recommended Model |
+| Task Type | Typical Work | Recommended Model |
 | :--- | :--- | :--- |
-| **🟢 Low** | Greetings, simple lookups, brief summaries. | `openai-codex/gpt-5.4-mini` |
-| **🟡 Medium** | Scripting, basic debugging, tool coordination. | `openai-codex/gpt-5.4-mini` |
-| **🔴 High** | Architectural design, security audits, deep reasoning. | `openai-codex/gpt-5.4` |
+| Low text | chat, simple lookups, short summaries | `zai/glm-4.7` |
+| Medium text | scripting, reviews, multi-tool work | `zai/glm-5` or `zai/glm-5-turbo` |
+| High text | architecture, deep debugging, security analysis | `zai/glm-5.1` |
+| Image or multimodal | screenshots, OCR, photo analysis, diagrams | `openai-codex/gpt-5.4` |
+
+## Why use this
+- Cut GPT weekly usage for text-only work.
+- Keep routing aligned with actual model capability.
+- Stay efficient without losing a strong image path.
 
 ## Installation
 
-1. **Clone the repository** into your skills directory:
+1. Clone the repository into your skills directory:
    ```bash
    git clone https://github.com/xaspx/models-triage ~/.openclaw/workspace/skills/models-triage
    ```
 
-2. **Enable in `openclaw.json`**:
+2. Enable in `openclaw.json`:
    ```json
    "skills": {
      "entries": {
@@ -34,13 +40,13 @@ Intelligent model routing and task triage for OpenClaw.
    }
    ```
 
-3. **Restart OpenClaw**:
+3. Restart OpenClaw:
    ```bash
    openclaw gateway restart
    ```
 
 ## Configuration
-Ensure your preferred model providers are configured in `openclaw.json` under `models.providers`. The triage logic references model IDs defined there.
+Edit `scripts/triage.js` if you want to change keyword heuristics, thresholds, or fallback order.
 
 ## License
 MIT

@@ -1,57 +1,30 @@
 ---
 name: models-triage
-description: "Intelligent model routing and task triage for OpenClaw."
-metadata:
-  {
-    "openclaw": {
-      "emoji": "🧠",
-      "tags": ["routing", "intelligence", "triage"]
-    }
-  }
+description: GLM-first model routing for OpenClaw. Use when selecting the most efficient model for a prompt, updating routing policy, reducing GPT quota burn, or reserving GPT only for image and multimodal tasks.
 ---
 
-# Skill: Models Triage 🧠⚡
+# Models Triage
 
-Automatically routes user prompts to the most suitable model based on complexity, optimizing cost without sacrificing quality.
+Route prompts by modality first, then by complexity.
 
-## Description
-This skill acts as an intelligent routing layer. It allows the agent to start in a low-cost "Triage Mode" (e.g., using GPT-5.4 mini) and escalate complex tasks to a higher-reasoning model (GPT-5.4) via sub-agents.
+## Routing policy
+- Keep text tasks on GLM by default.
+- Reserve GPT models for image or multimodal work.
+- Prefer the cheapest capable model before escalating.
 
-## Complexity Classification
+## Recommended tiers
+- Low text → `zai/glm-4.7`
+- Medium text → `zai/glm-5` or `zai/glm-5-turbo` when speed matters
+- High text → `zai/glm-5.1`
+- Image or multimodal → `openai-codex/gpt-5.4` with `openai-codex/gpt-5.4-mini` fallback
 
-### 🟢 LOW (Handle Locally)
-- Casual conversation, greetings, and small talk.
-- Simple status checks (system health, time, simple file reads).
-- Short summaries of provided text.
-- Formatting existing data.
-- **Model**: `openai-codex/gpt-5.4-mini`.
+## Protocol
+1. Run `scripts/triage.js` on the user prompt.
+2. If the result is text, stay in the GLM family unless there is a hard capability reason not to.
+3. If the result is image or multimodal, switch to GPT.
+4. Use the returned fallback order if the primary model is unavailable.
 
-### 🟡 MEDIUM (Escalate to GPT-5.4)
-- Writing or refactoring scripts/code.
-- Detailed system analysis or audits.
-- Searching and synthesizing information from the web or multiple files.
-- Managing multiple tools in a sequence.
-- **Model Override**: `openai-codex/gpt-5.4`
-
-### 🔴 HIGH (Escalate to GPT-5.4)
-- Complex software architecture design.
-- Deep logical reasoning or multi-step strategy.
-- High-stakes security audits.
-- Deep debugging of complex system errors.
-- **Model Override**: `openai-codex/gpt-5.4`
-
-## Triage Protocol (SOUL Integration)
-
-1. **Analyze**: On every user input, identify the complexity level (🟢/🟡/🔴).
-2. **Decide**:
-   - If 🟢: Respond immediately using the current session.
-   - If 🟡 or 🔴: Do NOT attempt to solve the problem yourself.
-3. **Escalate**: 
-   - Notify the user: "Menganalisis permintaan... Mengaktifkan sub-agent GPT-5.4 untuk hasil maksimal."
-   - Call `sessions_spawn` with the recommended model override and the original task.
-   - Deliver the sub-agent's result to the user when finished.
-
-## Benefits
-- **70-90% Cost Savings**: Entry calls always use the cheapest model.
-- **Improved Reliability**: Complex tasks are handled by models actually capable of solving them.
-- **Scalability**: Works seamlessly with OpenClaw's sub-agent orchestration.
+## Notes
+- Keep GPT weekly quota protected by avoiding GPT for text-only work.
+- Treat `zai/glm-4.7` as the default operating tier for routine chat and lightweight tasks.
+- Treat `zai/glm-5.1` as the strongest text reasoning tier in the current stack.

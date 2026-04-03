@@ -1,17 +1,17 @@
 # Model Triage Configuration
 
-To use `models-triage` effectively, define your preferred models for each complexity level.
+Use a GLM-first policy for text, and reserve GPT for image or multimodal work.
 
-## Recommended Tiers
-
-- **Low Complexity**: Fast, cheap models like `openai-codex/gpt-5.4-mini`.
-- **Medium Complexity**: Reliable all-rounders like `openai-codex/gpt-5.4`.
-- **High Complexity**: Large reasoning models like `openai-codex/gpt-5.4`.
+## Recommended tiers
+- Low text: `zai/glm-4.7`
+- Medium text: `zai/glm-5` or `zai/glm-5-turbo`
+- High text: `zai/glm-5.1`
+- Image or multimodal: `openai-codex/gpt-5.4`
 
 ## Customization
+- Edit `scripts/triage.js` to change keyword mapping or thresholds.
+- Keep GPT as the image path unless you add another image-capable provider.
+- Keep GLM variants ahead of GPT in text-only fallback chains.
 
-You can edit `scripts/triage.js` to change the keyword mapping or thresholds.
-
-## Environment Variables
-
-Ensure your `.env` contains the relevant API keys for the providers you choose.
+## Provider setup
+Configure auth profiles for `zai` and `openai-codex` in OpenClaw. Never commit real keys or secrets.
