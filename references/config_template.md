@@ -5,8 +5,8 @@ To use `models-triage` effectively, define your preferred models for each comple
 ## Recommended Tiers
 
 - **Low Complexity**: Fast, cheap models like `openai-codex/gpt-5.4-mini`.
-- **Medium Complexity**: Reliable all-rounders like `openai-codex/gpt-5.4-mini`.
-- **High Complexity**: Large reasoning models like `openai-codex/gpt-5.4` or `claude-3-5-sonnet-20241022`.
+- **Medium Complexity**: Reliable all-rounders like `openai-codex/gpt-5.4`.
+- **High Complexity**: Large reasoning models like `openai-codex/gpt-5.4`.
 
 ## Customization
 

@@ -37,7 +37,7 @@ function triage(prompt) {
         model = 'openai-codex/gpt-5.4';
     } else if (hasMedium || length > 300) {
         complexity = 'Medium';
-        model = 'openai-codex/gpt-5.4-mini';
+        model = 'openai-codex/gpt-5.4';
     }
 
     return {
