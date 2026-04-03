@@ -14,9 +14,9 @@ Intelligent model routing and task triage for OpenClaw.
 
 | Complexity | Typical Tasks | Recommended Model |
 | :--- | :--- | :--- |
-| **🟢 Low** | Greetings, simple lookups, brief summaries. | `gemini-3.1-flash-lite-preview` |
-| **🟡 Medium** | Scripting, basic debugging, tool coordination. | `gemini-3-flash-preview` |
-| **🔴 High** | Architectural design, security audits, deep reasoning. | `gemini-3.1-pro-preview` |
+| **🟢 Low** | Greetings, simple lookups, brief summaries. | `openai-codex/gpt-5.4-mini` |
+| **🟡 Medium** | Scripting, basic debugging, tool coordination. | `openai-codex/gpt-5.4-mini` |
+| **🔴 High** | Architectural design, security audits, deep reasoning. | `openai-codex/gpt-5.4` |
 
 ## Installation
 
